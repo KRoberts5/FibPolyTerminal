@@ -55,7 +55,7 @@ public class FibonacciPolynomialsTerminal {
         while(!done){
             
             System.out.println("\nWhat would you like to do?");
-            System.out.println("(F)ind Clusterings | (Q)uit");
+            System.out.println("(F)ind Clusterings | Find (C)oprime Product | (Q)uit");
             System.out.print("Input: ");
             
             
@@ -65,7 +65,10 @@ public class FibonacciPolynomialsTerminal {
                 
                 switch(input){
                     case "F":
-                        execute();
+                        executeClusterings();
+                        break;
+                    case "C":
+                        executeCoprime();
                         break;
                     case "Q":
                         done = true;
@@ -85,26 +88,73 @@ public class FibonacciPolynomialsTerminal {
         }
     }
     
-    private static void execute(){
+    private static void getNandXInput(){
         Scanner in = new Scanner(System.in);
-
             try{
-                
                 System.out.print("Nth Polynomial: ");
                 n = in.nextInt();
                 
                 System.out.print("X value: ");
                 x = in.nextDouble();
-                
-                
             }
             catch(Exception e){
                 System.err.println(e.toString());
             }
             
-            generateFactors();
-            findClusters();
-            printClusterings();
+            
+    }
+    
+    private static void executeCoprime(){
+        getNandXInput();
+        ArrayList<Factor> coprimes = generateCoprimeFactors();
+        printFactors(coprimes);
+        
+        double coprimeProduct = findProduct(coprimes);
+        System.out.println("Product of Coprimes: " + coprimeProduct);
+    }
+    
+    private static void printFactors(ArrayList<Factor> factors){
+        StringBuilder output = new StringBuilder();
+        
+        output.append("Factors: ");
+        
+        for(Factor f: factors){
+            output.append(f.toString());
+        }
+        
+        System.out.println(output.toString());
+    }
+    
+    private static double findProduct(ArrayList<Factor> factors){
+        double product = 1;
+        
+        for(Factor f: factors){
+            product *= f.getValue();
+        }
+        return product;
+    }
+    
+    private static ArrayList<Factor> generateCoprimeFactors(){
+        ArrayList<Factor> coprimes = new ArrayList<>();
+        Factor f;
+        
+        for(int i = 1; i <=n; ++i){
+            if(isCoprime(i,n)){
+                f = new Factor(i,n,x);
+                coprimes.add(f);
+            }
+        }
+        
+        return coprimes;
+    }
+    
+    private static void executeClusterings(){
+        getNandXInput();
+            
+        generateFactors();
+        findClusters();
+        printClusterings();
+            
     }
     
     private static void generateFactors(){
@@ -228,6 +278,23 @@ public class FibonacciPolynomialsTerminal {
         }
         
         return zeroString + binaryNLZ;
+    }
+    
+    public static boolean isCoprime(int x, int y){
+        
+        boolean coprime = true;
+        
+        if((x!=1)&&(y!=1)){
+            if((x%y==0)||(y%x==0))
+                coprime = false;
+            else{
+                for(int i = 2; (i<=(x/2))&&(i<=y/2); ++i){
+                    if((x%i==0)&&(y%i==0))
+                        coprime = false;
+                }
+            }
+        }
+        return coprime;
     }
    
         
