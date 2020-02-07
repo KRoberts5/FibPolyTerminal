@@ -138,7 +138,7 @@ public class FibonacciPolynomialsTerminal {
         ArrayList<Factor> coprimes = new ArrayList<>();
         Factor f;
         
-        for(int i = 1; i <=n; ++i){
+        for(int i = 1; i <=n/2; ++i){
             if(isCoprime(i,n)){
                 f = new Factor(i,n,x);
                 coprimes.add(f);
