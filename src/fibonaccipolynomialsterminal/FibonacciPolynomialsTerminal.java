@@ -57,7 +57,7 @@ public class FibonacciPolynomialsTerminal {
             
             
             System.out.println("\nWhat would you like to do?");
-            System.out.println("(F)ind Clusterings | Find (C)oprime Product | (Q)uit");
+            System.out.println("(1) Find Clusterings | (2) Find Coprime Product | (3) Find Coprime Clusters  | (Q)uit");
             System.out.print("Input: ");
             
             
@@ -66,11 +66,14 @@ public class FibonacciPolynomialsTerminal {
                 input = input.toUpperCase();
                 
                 switch(input){
-                    case "F":
+                    case "1":
                         executeClusterings();
                         break;
-                    case "C":
+                    case "2":
                         executeCoprime();
+                        break;
+                    case "3":
+                        executeCoprimeClusterings();
                         break;
                     case "Q":
                         done = true;
@@ -104,6 +107,18 @@ public class FibonacciPolynomialsTerminal {
             }
             
             
+    }
+    
+    private static void executeCoprimeClusterings(){
+        getNandXInput();
+        ArrayList<Factor> coprimes = generateCoprimeFactors();
+        findClusters(coprimes);
+        try{
+            createClustersFile("coprime");
+        }
+        catch(Exception e){
+            System.err.println(e);
+        }
     }
     
     private static void executeCoprime(){
@@ -324,6 +339,35 @@ public class FibonacciPolynomialsTerminal {
         
     }
    
+    private static void createClustersFile(String fileDesc)throws FileNotFoundException, IOException{
+        
+        StringWriter writer = new StringWriter();
+        CSVWriter csv = new CSVWriter(writer,',','"','\n');
+        String[] row = {"Value", "Count"};
+        csv.writeNext(row);
+        
+        for(HashMap.Entry<Long,Integer> cluster : clusterings.entrySet()){
+            row[0] = String.valueOf(cluster.getKey());
+            row[1] = String.valueOf(cluster.getValue());
+            csv.writeNext(row);
+        }
+        
+        String fileName = "F"+ n +"_" +fileDesc+ "_Clusters.csv";
+        
+        String filePath = System.getProperty("user.home") + "\\Desktop\\";
+        File file = new File(filePath + fileName);
+        file.createNewFile();
+        
+        PrintWriter out = new PrintWriter(file);
+        out.write(writer.toString());
+        
+        
+        
+        out.write('\n');
+        out.close();
+        
+    }
+    
     private static void createFile(String fileName, String data) throws FileNotFoundException, IOException{
         String filePath = System.getProperty("user.home") + "\\Desktop\\";
         File file = new File(filePath + fileName);
