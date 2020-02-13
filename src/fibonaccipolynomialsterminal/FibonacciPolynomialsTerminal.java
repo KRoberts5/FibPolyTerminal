@@ -268,8 +268,6 @@ public class FibonacciPolynomialsTerminal {
         }
     }
     
-    
-    
     private static String generateBinaryString(int num, int digits){
         //num is the value of the number
         //digits is how many digits in the number (So that leading zeroes can be created).
@@ -362,18 +360,5 @@ public class FibonacciPolynomialsTerminal {
         out.close();
         
     }
-    
-    private static void createFile(String fileName, String data) throws FileNotFoundException, IOException{
-        String filePath = System.getProperty("user.home") + "\\Desktop\\";
-        File file = new File(filePath + fileName);
-        file.createNewFile();
-        
-        PrintWriter out = new PrintWriter(file);
-        out.write(data);
-        
-        out.write('\n');
-        out.close();
-    }
-    
     
 }
