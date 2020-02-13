@@ -54,6 +54,8 @@ public class FibonacciPolynomialsTerminal {
         
         while(!done){
             
+            
+            
             System.out.println("\nWhat would you like to do?");
             System.out.println("(F)ind Clusterings | Find (C)oprime Product | (Q)uit");
             System.out.print("Input: ");
@@ -151,15 +153,19 @@ public class FibonacciPolynomialsTerminal {
     private static void executeClusterings(){
         getNandXInput();
             
-        generateFactors();
-        findClusters();
-        printClusterings();
-            
+        ArrayList<Factor> factors = generateFactors();
+        findClusters(factors);
+        //printClusterings();
+        try{
+            createClustersFile(); 
+
+        }
+        catch(Exception e){System.err.println(e.toString());}
     }
     
-    private static void generateFactors(){
+    private static ArrayList<Factor> generateFactors(){
         //factors = new ArrayList<>();
-        significantFactors = new ArrayList<>();
+        ArrayList<Factor> significantFactors = new ArrayList<>();
         fullFactorization = new StringBuilder();
         Factor f;
         double product = 1;
@@ -181,9 +187,10 @@ public class FibonacciPolynomialsTerminal {
         System.out.println("Product Value: " + product);
         System.out.println("Factors: \n"+fullFactorization.toString());
         
+        return significantFactors;
     }
     
-    private static void findClusters(){
+    private static void findClusters(ArrayList<Factor> significantFactors){
         int numFactors = significantFactors.size();
         ArrayList<Factor> factorSubset = new ArrayList();
         long powerSetMax = (long)Math.pow(2, numFactors);
@@ -237,6 +244,7 @@ public class FibonacciPolynomialsTerminal {
         
         System.out.println("");
         System.out.println("Number of Combinations: " + pc);
+        System.out.println("Number of Cluster Values: " + clusterings.size());
         System.out.println("Sum of Products: " + productSum);
         System.out.println("Mean of Products: " + productMean + "\n");
     }
@@ -250,17 +258,7 @@ public class FibonacciPolynomialsTerminal {
         }
     }
     
-    private static void createFile(String fileName, String data) throws FileNotFoundException, IOException{
-        
-        String filePath = System.getProperty("user.home") + "\\Desktop\\";
-        File file = new File(filePath + fileName);
-        file.createNewFile();
-        
-        PrintWriter out = new PrintWriter(file);
-        out.write(data);
-        out.write('\n');
-        out.close();
-    }
+    
     
     private static String generateBinaryString(int num, int digits){
         //num is the value of the number
@@ -296,8 +294,47 @@ public class FibonacciPolynomialsTerminal {
         }
         return coprime;
     }
-   
+    
+    private static void createClustersFile()throws FileNotFoundException, IOException{
         
+        StringWriter writer = new StringWriter();
+        CSVWriter csv = new CSVWriter(writer,',','"','\n');
+        String[] row = {"Value", "Count"};
+        csv.writeNext(row);
+        
+        for(HashMap.Entry<Long,Integer> cluster : clusterings.entrySet()){
+            row[0] = String.valueOf(cluster.getKey());
+            row[1] = String.valueOf(cluster.getValue());
+            csv.writeNext(row);
+        }
+        
+        String fileName = "F"+ n + "_Clusters.csv";
+        
+        String filePath = System.getProperty("user.home") + "\\Desktop\\";
+        File file = new File(filePath + fileName);
+        file.createNewFile();
+        
+        PrintWriter out = new PrintWriter(file);
+        out.write(writer.toString());
+        
+        
+        
+        out.write('\n');
+        out.close();
+        
+    }
+   
+    private static void createFile(String fileName, String data) throws FileNotFoundException, IOException{
+        String filePath = System.getProperty("user.home") + "\\Desktop\\";
+        File file = new File(filePath + fileName);
+        file.createNewFile();
+        
+        PrintWriter out = new PrintWriter(file);
+        out.write(data);
+        
+        out.write('\n');
+        out.close();
+    }
     
     
 }
