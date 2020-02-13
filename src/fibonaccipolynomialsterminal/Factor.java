@@ -20,13 +20,7 @@ public class Factor {
     private int n;
     private boolean equalsOne;
     
-    /*public Factor(double x){
-            this.x = x;
-            this.value = x;
-            
-            k = 0;
-            n = 0;
-    }*/
+
     
     public Factor(int k, int n){
         
@@ -66,12 +60,7 @@ public class Factor {
     
     public String toString(){
         
-        String output ="";
-        
-        if(k == 0)
-            output = "(" + x+")";
-        else
-            output = "(" +x+ "^2 + 4*(COS(" + k + "*pi/" + n + "))^2)";
+        String output = "(" +x+ "^2 + 4*(COS(" + k + "*pi/" + n + "))^2)";
         
         return output;
     }
