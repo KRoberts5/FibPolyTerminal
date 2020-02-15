@@ -86,21 +86,11 @@ public class FibonacciPolynomialsTerminal {
         }
     }
     
-    private static void getNandXInput(){
-        Scanner in = new Scanner(System.in);
-            try{
-                System.out.print("Nth Polynomial: ");
-                n = in.nextInt();
-                
-                System.out.print("X value: ");
-                x = in.nextDouble();
-            }
-            catch(Exception e){
-                System.err.println(e.toString());
-            }
-            
-            
-    }
+    /*
+    *
+    *Execution Methods
+    *
+    */
     
     private static void executeCoprimeClusterings(){
         getNandXInput();
@@ -123,41 +113,6 @@ public class FibonacciPolynomialsTerminal {
         System.out.println("Product of Coprimes: " + coprimeProduct);
     }
     
-    private static void printFactors(ArrayList<FibonacciFactor> factors){
-        StringBuilder output = new StringBuilder();
-        
-        output.append("Factors: ");
-        
-        for(FibonacciFactor f: factors){
-            output.append(f.toString());
-        }
-        
-        System.out.println(output.toString());
-    }
-    
-    private static double findProduct(ArrayList<FibonacciFactor> factors){
-        double product = 1;
-        
-        for(FibonacciFactor f: factors){
-            product *= f.getValue();
-        }
-        return product;
-    }
-    
-    private static ArrayList<FibonacciFactor> generateCoprimeFactors(){
-        ArrayList<FibonacciFactor> coprimes = new ArrayList<>();
-        FibonacciFactor f;
-        
-        for(int i = 1; i <=n/2; ++i){
-            if(isCoprime(i,n)){
-                f = new FibonacciFactor(i,n,x);
-                coprimes.add(f);
-            }
-        }
-        
-        return coprimes;
-    }
-    
     private static void executeClusterings(){
         getNandXInput();
             
@@ -171,14 +126,18 @@ public class FibonacciPolynomialsTerminal {
         catch(Exception e){System.err.println(e.toString());}
     }
     
+    /*
+    *
+    *Factor Generation Methods
+    *
+    */
+    
     private static ArrayList<FibonacciFactor> generateFactors(){
         //factors = new ArrayList<>();
         ArrayList<FibonacciFactor> significantFactors = new ArrayList<>();
         StringBuilder fullFactorization = new StringBuilder();
         FibonacciFactor f;
         double product = 1;
-        
-        
         
         for(int i = 1; i <= n/2; ++i){
             f = new FibonacciFactor(i,n,x);
@@ -197,6 +156,26 @@ public class FibonacciPolynomialsTerminal {
         
         return significantFactors;
     }
+    
+    private static ArrayList<FibonacciFactor> generateCoprimeFactors(){
+        ArrayList<FibonacciFactor> coprimes = new ArrayList<>();
+        FibonacciFactor f;
+        
+        for(int i = 1; i <=n/2; ++i){
+            if(isCoprime(i,n)){
+                f = new FibonacciFactor(i,n,x);
+                coprimes.add(f);
+            }
+        }
+        
+        return coprimes;
+    }
+    
+    /*
+    *
+    *Computational Methods
+    *
+    */
     
     private static TreeMap<Long,Integer> findClusters(ArrayList<FibonacciFactor> significantFactors){
         int numFactors = significantFactors.size();
@@ -259,14 +238,16 @@ public class FibonacciPolynomialsTerminal {
         return clusterings;
     }
     
-    private static void printClusterings(TreeMap<Long,Integer> clusterings){
+    
+    private static double findProduct(ArrayList<FibonacciFactor> factors){
+        double product = 1;
         
-        System.out.println("Clusterings: ");
-        
-        for(HashMap.Entry<Long,Integer> cluster : clusterings.entrySet()){
-            System.out.println("Nearest Int: " + cluster.getKey() +" | Count: " + cluster.getValue());
+        for(FibonacciFactor f: factors){
+            product *= f.getValue();
         }
+        return product;
     }
+    
     
     private static String generateBinaryString(int num, int digits){
         //num is the value of the number
@@ -301,6 +282,47 @@ public class FibonacciPolynomialsTerminal {
             }
         }
         return coprime;
+    }
+    
+    
+    /*
+    *
+    *Input/Output Methods
+    *
+    */
+    private static void getNandXInput(){
+        Scanner in = new Scanner(System.in);
+            try{
+                System.out.print("Nth Polynomial: ");
+                n = in.nextInt();
+                
+                System.out.print("X value: ");
+                x = in.nextDouble();
+            }
+            catch(Exception e){
+                System.err.println(e.toString());
+            }
+    }
+    
+    private static void printClusterings(TreeMap<Long,Integer> clusterings){
+        
+        System.out.println("Clusterings: ");
+        
+        for(HashMap.Entry<Long,Integer> cluster : clusterings.entrySet()){
+            System.out.println("Nearest Int: " + cluster.getKey() +" | Count: " + cluster.getValue());
+        }
+    }
+    
+    private static void printFactors(ArrayList<FibonacciFactor> factors){
+        StringBuilder output = new StringBuilder();
+        
+        output.append("Factors: ");
+        
+        for(FibonacciFactor f: factors){
+            output.append(f.toString());
+        }
+        
+        System.out.println(output.toString());
     }
     
     private static void createClustersFile(TreeMap<Long,Integer> clusterings)throws FileNotFoundException, IOException{
