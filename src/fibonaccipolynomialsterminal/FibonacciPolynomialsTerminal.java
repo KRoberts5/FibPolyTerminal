@@ -95,6 +95,8 @@ public class FibonacciPolynomialsTerminal {
     private static void executeCoprimeClusterings(){
         getNandXInput();
         ArrayList<FibonacciFactor> coprimes = generateCoprimeFactors();
+        Double product = findProduct(coprimes);
+        printFactors(coprimes);
         TreeMap<Long,Integer> clusters = findClusters(coprimes);
         try{
             createClustersFile(clusters, "coprime");
@@ -117,6 +119,9 @@ public class FibonacciPolynomialsTerminal {
         getNandXInput();
             
         ArrayList<FibonacciFactor> factors = generateFactors();
+        Double product = findProduct(factors);
+        System.out.println("Product: " + product);
+        printFactors(factors);
         TreeMap<Long,Integer> clusters = findClusters(factors);
         //printClusterings();
         try{
@@ -135,24 +140,12 @@ public class FibonacciPolynomialsTerminal {
     private static ArrayList<FibonacciFactor> generateFactors(){
         //factors = new ArrayList<>();
         ArrayList<FibonacciFactor> significantFactors = new ArrayList<>();
-        StringBuilder fullFactorization = new StringBuilder();
         FibonacciFactor f;
-        double product = 1;
         
         for(int i = 1; i <= n/2; ++i){
             f = new FibonacciFactor(i,n,x);
-            
-            fullFactorization.append(f.toString() + " ");
-            
-            if(!f.equalsOne()){
-                significantFactors.add(f);
-                product *= f.getValue();
-            }
-            
+            significantFactors.add(f);
         }
-        
-        System.out.println("Product Value: " + product);
-        System.out.println("Factors: \n"+fullFactorization.toString());
         
         return significantFactors;
     }
@@ -243,7 +236,8 @@ public class FibonacciPolynomialsTerminal {
         double product = 1;
         
         for(FibonacciFactor f: factors){
-            product *= f.getValue();
+            if(!f.equalsOne())
+                product *= f.getValue();
         }
         return product;
     }
