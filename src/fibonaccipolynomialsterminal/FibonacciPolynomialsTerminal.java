@@ -171,7 +171,6 @@ public class FibonacciPolynomialsTerminal {
     
     private static TreeMap<Long,Integer> findClusters(ArrayList<FibonacciFactor> significantFactors){
         int numFactors = significantFactors.size();
-        ArrayList<FibonacciFactor> factorSubset = new ArrayList();
         long powerSetMax = (long)Math.pow(2, numFactors);
         
         double productSum = 0;
@@ -181,26 +180,15 @@ public class FibonacciPolynomialsTerminal {
         
         int pc = 0;
         
-        
         for(int i = 1; i < powerSetMax; ++i){
             
-            
-            factorSubset = new ArrayList();
             Double currentValue = new Double(1);
-            StringBuilder subsetFactorization = new StringBuilder();
             String binary = generateBinaryString(i,numFactors);
-            
-            
             
             for(int j = 0; j <binary.length(); ++j){
                 
-                if(binary.charAt(j) == '1'){
-                    
-                    factorSubset.add(significantFactors.get(j));
-                    subsetFactorization.append(significantFactors.get(j).toString() + "  ");
+                if(binary.charAt(j) == '1')
                     currentValue = currentValue * significantFactors.get(j).getValue();
-                    
-                }
             }
             
             ++pc;
