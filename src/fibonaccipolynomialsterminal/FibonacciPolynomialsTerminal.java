@@ -235,7 +235,7 @@ public class FibonacciPolynomialsTerminal {
         //digits is how many digits in the number (So that leading zeroes can be created).
         
         String binaryNLZ = Integer.toBinaryString(num); //Binary String with no leading zeroes
-        int numZeroes = digits - binaryNLZ.length();
+        /*int numZeroes = digits - binaryNLZ.length();
         
         String zeroString = "";
         
@@ -243,9 +243,11 @@ public class FibonacciPolynomialsTerminal {
             for(int i = 0; i < numZeroes; ++i){
                 zeroString += "0";
             }
-        }
+        }*/
         
-        return zeroString + binaryNLZ;
+        String binaryString = String.format("%" + digits + "s", binaryNLZ).replace(" ", "0");
+        
+        return binaryString;
     }
     
     public static boolean isCoprime(int x, int y){
