@@ -12,7 +12,7 @@ package fibonaccipolynomialsterminal;
 
 import java.lang.Math;
 
-public class Factor {
+public class FibonacciFactor {
     
     private double value;
     private double x;
@@ -22,7 +22,7 @@ public class Factor {
     
 
     
-    public Factor(int k, int n){
+    public FibonacciFactor(int k, int n){
         
         this.k = k;
         this.n = n;
@@ -35,7 +35,7 @@ public class Factor {
             equalsOne = false;
     }
     
-    public Factor(int k, int n, double x){
+    public FibonacciFactor(int k, int n, double x){
         this.k = k;
         this.n = n;
         this.x = x;

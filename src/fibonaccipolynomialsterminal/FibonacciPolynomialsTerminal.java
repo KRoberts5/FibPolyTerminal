@@ -104,7 +104,7 @@ public class FibonacciPolynomialsTerminal {
     
     private static void executeCoprimeClusterings(){
         getNandXInput();
-        ArrayList<Factor> coprimes = generateCoprimeFactors();
+        ArrayList<FibonacciFactor> coprimes = generateCoprimeFactors();
         TreeMap<Long,Integer> clusters = findClusters(coprimes);
         try{
             createClustersFile(clusters, "coprime");
@@ -116,41 +116,41 @@ public class FibonacciPolynomialsTerminal {
     
     private static void executeCoprime(){
         getNandXInput();
-        ArrayList<Factor> coprimes = generateCoprimeFactors();
+        ArrayList<FibonacciFactor> coprimes = generateCoprimeFactors();
         printFactors(coprimes);
         
         double coprimeProduct = findProduct(coprimes);
         System.out.println("Product of Coprimes: " + coprimeProduct);
     }
     
-    private static void printFactors(ArrayList<Factor> factors){
+    private static void printFactors(ArrayList<FibonacciFactor> factors){
         StringBuilder output = new StringBuilder();
         
         output.append("Factors: ");
         
-        for(Factor f: factors){
+        for(FibonacciFactor f: factors){
             output.append(f.toString());
         }
         
         System.out.println(output.toString());
     }
     
-    private static double findProduct(ArrayList<Factor> factors){
+    private static double findProduct(ArrayList<FibonacciFactor> factors){
         double product = 1;
         
-        for(Factor f: factors){
+        for(FibonacciFactor f: factors){
             product *= f.getValue();
         }
         return product;
     }
     
-    private static ArrayList<Factor> generateCoprimeFactors(){
-        ArrayList<Factor> coprimes = new ArrayList<>();
-        Factor f;
+    private static ArrayList<FibonacciFactor> generateCoprimeFactors(){
+        ArrayList<FibonacciFactor> coprimes = new ArrayList<>();
+        FibonacciFactor f;
         
         for(int i = 1; i <=n/2; ++i){
             if(isCoprime(i,n)){
-                f = new Factor(i,n,x);
+                f = new FibonacciFactor(i,n,x);
                 coprimes.add(f);
             }
         }
@@ -161,7 +161,7 @@ public class FibonacciPolynomialsTerminal {
     private static void executeClusterings(){
         getNandXInput();
             
-        ArrayList<Factor> factors = generateFactors();
+        ArrayList<FibonacciFactor> factors = generateFactors();
         TreeMap<Long,Integer> clusters = findClusters(factors);
         //printClusterings();
         try{
@@ -171,17 +171,17 @@ public class FibonacciPolynomialsTerminal {
         catch(Exception e){System.err.println(e.toString());}
     }
     
-    private static ArrayList<Factor> generateFactors(){
+    private static ArrayList<FibonacciFactor> generateFactors(){
         //factors = new ArrayList<>();
-        ArrayList<Factor> significantFactors = new ArrayList<>();
+        ArrayList<FibonacciFactor> significantFactors = new ArrayList<>();
         StringBuilder fullFactorization = new StringBuilder();
-        Factor f;
+        FibonacciFactor f;
         double product = 1;
         
         
         
         for(int i = 1; i <= n/2; ++i){
-            f = new Factor(i,n,x);
+            f = new FibonacciFactor(i,n,x);
             
             fullFactorization.append(f.toString() + " ");
             
@@ -198,9 +198,9 @@ public class FibonacciPolynomialsTerminal {
         return significantFactors;
     }
     
-    private static TreeMap<Long,Integer> findClusters(ArrayList<Factor> significantFactors){
+    private static TreeMap<Long,Integer> findClusters(ArrayList<FibonacciFactor> significantFactors){
         int numFactors = significantFactors.size();
-        ArrayList<Factor> factorSubset = new ArrayList();
+        ArrayList<FibonacciFactor> factorSubset = new ArrayList();
         long powerSetMax = (long)Math.pow(2, numFactors);
         
         double productSum = 0;
