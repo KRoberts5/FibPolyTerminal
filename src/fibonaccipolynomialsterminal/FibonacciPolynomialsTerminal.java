@@ -96,6 +96,7 @@ public class FibonacciPolynomialsTerminal {
         getNandXInput();
         ArrayList<FibonacciFactor> coprimes = generateCoprimeFactors();
         Double product = findProduct(coprimes);
+        System.out.println("Product of Coprimes: " + product);
         printFactors(coprimes);
         TreeMap<Long,Integer> clusters = findClusters(coprimes);
         try{
@@ -110,7 +111,6 @@ public class FibonacciPolynomialsTerminal {
         getNandXInput();
         ArrayList<FibonacciFactor> coprimes = generateCoprimeFactors();
         printFactors(coprimes);
-        
         double coprimeProduct = findProduct(coprimes);
         System.out.println("Product of Coprimes: " + coprimeProduct);
     }
@@ -126,7 +126,6 @@ public class FibonacciPolynomialsTerminal {
         //printClusterings();
         try{
             createClustersFile(clusters); 
-
         }
         catch(Exception e){System.err.println(e.toString());}
     }
