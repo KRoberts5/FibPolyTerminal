@@ -39,20 +39,13 @@ public class FibonacciPolynomialsTerminal {
     public static void main(String[] args) {   
         
         boolean done = false;
-        
         Scanner in = new Scanner(System.in);
-        
-        
         System.out.println("Welcome to Fibonacci Polynomials\n");
         
         while(!done){
-            
-            
-            
             System.out.println("\nWhat would you like to do?");
             System.out.println("(1) Find Clusterings | (2) Find Coprime Product | (3) Find Coprime Clusters  | (Q)uit");
             System.out.print("Input: ");
-            
             
             try{
                 String input = in.next();
@@ -74,15 +67,10 @@ public class FibonacciPolynomialsTerminal {
                     default:
                         System.out.println("Invalid Input\n");
                 }
-                
-                
             }
             catch(Exception e){
                 System.err.println(e.toString());
             }
-            
-            
-            
         }
     }
     
@@ -117,13 +105,11 @@ public class FibonacciPolynomialsTerminal {
     
     private static void executeClusterings(){
         getNandXInput();
-            
         ArrayList<FibonacciFactor> factors = generateFactors();
         Double product = findProduct(factors);
         System.out.println("Product: " + product);
         printFactors(factors);
         TreeMap<Long,Integer> clusters = findClusters(factors);
-        //printClusterings();
         try{
             createClustersFile(clusters); 
         }
@@ -137,7 +123,6 @@ public class FibonacciPolynomialsTerminal {
     */
     
     private static ArrayList<FibonacciFactor> generateFactors(){
-        //factors = new ArrayList<>();
         ArrayList<FibonacciFactor> significantFactors = new ArrayList<>();
         FibonacciFactor f;
         
@@ -172,12 +157,9 @@ public class FibonacciPolynomialsTerminal {
     private static TreeMap<Long,Integer> findClusters(ArrayList<FibonacciFactor> significantFactors){
         int numFactors = significantFactors.size();
         long powerSetMax = (long)Math.pow(2, numFactors);
-        
         double productSum = 0;
         double productMean = 0;
-        
         TreeMap<Long,Integer> clusterings = new TreeMap<>();
-        
         int pc = 0;
         
         for(int i = 1; i < powerSetMax; ++i){
@@ -192,7 +174,6 @@ public class FibonacciPolynomialsTerminal {
             }
             
             ++pc;
-            
             Long key = Math.round(currentValue);
             
             if(clusterings.containsKey(key)){
@@ -207,7 +188,6 @@ public class FibonacciPolynomialsTerminal {
         }
         
         productMean = productSum/pc;
-        
         
         System.out.println("");
         System.out.println("Number of Combinations: " + pc);
@@ -251,7 +231,6 @@ public class FibonacciPolynomialsTerminal {
     }
     
     public static boolean isCoprime(int x, int y){
-        
         boolean coprime = true;
         
         if((x!=1)&&(y!=1)){
@@ -330,8 +309,6 @@ public class FibonacciPolynomialsTerminal {
         PrintWriter out = new PrintWriter(file);
         out.write(writer.toString());
         
-        
-        
         out.write('\n');
         out.close();
         
@@ -359,11 +336,7 @@ public class FibonacciPolynomialsTerminal {
         PrintWriter out = new PrintWriter(file);
         out.write(writer.toString());
         
-        
-        
         out.write('\n');
         out.close();
-        
     }
-    
 }
