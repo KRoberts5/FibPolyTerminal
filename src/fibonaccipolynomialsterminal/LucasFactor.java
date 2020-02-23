@@ -9,26 +9,26 @@ package fibonaccipolynomialsterminal;
  *
  * @author Brendan
  */
-public class FibonacciFactor extends Factor{
-    public FibonacciFactor(int k, int n){
+public class LucasFactor extends Factor{
+    public LucasFactor(int k, int n){
         super(k,n);
     }
     
-    public FibonacciFactor(int k, int n, double x){
+    public LucasFactor(int k, int n, double x){
         super(k,n,x);
     }
-    public FibonacciFactor(int k, int n, double x, double y){
+    public LucasFactor(int k, int n, double x, double y){
         super(k,n,x,y);
     }
      protected void setValue(){
-        double theta = (k*Math.PI)/n;
+        double theta = ((2*k-1)*Math.PI)/(2*n);
         double cosine = Math.cos(theta);
         
         value = Math.pow(x, 2) + 4*y*(Math.pow(cosine, 2));
     }
     public String toString(){
         
-        String output = "(" +x+ "^2 + 4(" + y +")(COS(" + k + "pi/" + n + "))^2)";
+        String output = "(" +x+ "^2 + 4(" + y +")(COS(" + ((2*k)-1) + "pi/" + (2*n) + "))^2)";
         
         return output;
     }

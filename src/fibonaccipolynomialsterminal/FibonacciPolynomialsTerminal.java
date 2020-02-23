@@ -34,6 +34,7 @@ public class FibonacciPolynomialsTerminal {
     
         private static int n;
         private static double x;
+        private static double y;
         
     
     public static void main(String[] args) {   
@@ -44,7 +45,8 @@ public class FibonacciPolynomialsTerminal {
         
         while(!done){
             System.out.println("\nWhat would you like to do?");
-            System.out.println("(1) Find Clusterings | (2) Find Coprime Product | (3) Find Coprime Clusters  | (Q)uit");
+            System.out.println("(1) Find Fibonacci Clusters | (2) Find Fibonacci Coprime Product | (3) Find Fibonacci Coprime Clusters  "
+                    + "\n(4) Find Lucas Clusters | (5) Find Lucas Coprime Clusters | (Q)uit");
             System.out.print("Input: ");
             
             try{
@@ -53,13 +55,19 @@ public class FibonacciPolynomialsTerminal {
                 
                 switch(input){
                     case "1":
-                        executeClusterings();
+                        executeFindFibonacciClusters();
                         break;
                     case "2":
-                        executeCoprime();
+                        executeFindFibonacciCoprimes();
                         break;
                     case "3":
-                        executeCoprimeClusterings();
+                        executeFindFibonacciCoprimeClusters();
+                        break;
+                    case "4":
+                        executeFindLucasClusters();
+                        break;
+                    case "5":
+                        executeFindLucasCoprimeClusters();
                         break;
                     case "Q":
                         done = true;
@@ -80,38 +88,70 @@ public class FibonacciPolynomialsTerminal {
     *
     */
     
-    private static void executeCoprimeClusterings(){
-        getNandXInput();
-        ArrayList<FibonacciFactor> coprimes = generateCoprimeFactors();
+    private static void executeFindFibonacciCoprimeClusters(){
+        getUserInput();
+        ArrayList<Factor> coprimes = generateCoprimeFibonacciFactors();
         Double product = findProduct(coprimes);
         System.out.println("Product of Coprimes: " + product);
         printFactors(coprimes);
         TreeMap<Long,Integer> clusters = findClusters(coprimes);
         try{
-            createClustersFile(clusters, "coprime");
+            createClustersFile(clusters,"F", "coprime");
         }
         catch(Exception e){
             System.err.println(e);
         }
     }
     
-    private static void executeCoprime(){
-        getNandXInput();
-        ArrayList<FibonacciFactor> coprimes = generateCoprimeFactors();
+    private static void executeFindFibonacciCoprimes(){
+        getUserInput();
+        ArrayList<Factor> coprimes = generateCoprimeFibonacciFactors();
         printFactors(coprimes);
         double coprimeProduct = findProduct(coprimes);
         System.out.println("Product of Coprimes: " + coprimeProduct);
     }
     
-    private static void executeClusterings(){
-        getNandXInput();
-        ArrayList<FibonacciFactor> factors = generateFactors();
+    private static void executeFindFibonacciClusters(){
+        getUserInput();
+        ArrayList<Factor> factors = generateFibonacciFactors();
         Double product = findProduct(factors);
         System.out.println("Product: " + product);
         printFactors(factors);
         TreeMap<Long,Integer> clusters = findClusters(factors);
         try{
-            createClustersFile(clusters); 
+            createClustersFile(clusters, "F"); 
+        }
+        catch(Exception e){System.err.println(e.toString());}
+    }
+    
+    private static void executeFindLucasFactors(){
+        getUserInput();
+        ArrayList<Factor> factors = generateLucasFactors();
+        Double product = findProduct(factors);
+        System.out.println("Product: " + product);
+        printFactors(factors);
+    }
+    private static void executeFindLucasClusters(){
+        getUserInput();
+        ArrayList<Factor> factors =generateLucasFactors();
+        double product = findProduct(factors);
+        System.out.println("Product: " + product);
+        printFactors(factors);
+        TreeMap<Long,Integer> clusters = findClusters(factors);
+        try{
+            createClustersFile(clusters,"L");
+        }
+        catch(Exception e){System.err.println(e.toString());}
+    }
+    private static void executeFindLucasCoprimeClusters(){
+        getUserInput();
+        ArrayList<Factor> factors =generateCoprimeLucasFactors();
+        double product = findProduct(factors);
+        System.out.println("Product: " + product);
+        printFactors(factors);
+        TreeMap<Long,Integer> clusters = findClusters(factors);
+        try{
+            createClustersFile(clusters,"L","Coprime");
         }
         catch(Exception e){System.err.println(e.toString());}
     }
@@ -122,25 +162,25 @@ public class FibonacciPolynomialsTerminal {
     *
     */
     
-    private static ArrayList<FibonacciFactor> generateFactors(){
-        ArrayList<FibonacciFactor> significantFactors = new ArrayList<>();
-        FibonacciFactor f;
+    private static ArrayList<Factor> generateFibonacciFactors(){
+        ArrayList<Factor> significantFactors = new ArrayList<>();
+        Factor f;
         
         for(int i = 1; i <= n/2; ++i){
-            f = new FibonacciFactor(i,n,x);
+            f = new FibonacciFactor(i,n,x,y);
             significantFactors.add(f);
         }
         
         return significantFactors;
     }
     
-    private static ArrayList<FibonacciFactor> generateCoprimeFactors(){
-        ArrayList<FibonacciFactor> coprimes = new ArrayList<>();
-        FibonacciFactor f;
+    private static ArrayList<Factor> generateCoprimeFibonacciFactors(){
+        ArrayList<Factor> coprimes = new ArrayList<>();
+        Factor f;
         
         for(int i = 1; i <=n/2; ++i){
             if(isCoprime(i,n)){
-                f = new FibonacciFactor(i,n,x);
+                f = new FibonacciFactor(i,n,x,y);
                 coprimes.add(f);
             }
         }
@@ -148,13 +188,30 @@ public class FibonacciPolynomialsTerminal {
         return coprimes;
     }
     
+    private static ArrayList<Factor> generateLucasFactors(){
+        ArrayList<Factor> factors = new ArrayList();
+        for(int i = 1; i <= n/2; ++i)
+            factors.add(new LucasFactor(i,n,x,y));
+        return factors;
+    }
+    
+    private static ArrayList<Factor> generateCoprimeLucasFactors(){
+        ArrayList<Factor> factors = new ArrayList();
+        for(int i = 1; i <= n/2; ++i){
+            if(isCoprime(i,n))
+                factors.add(new LucasFactor(i,n,x,y));
+        }
+        return factors;
+    }
+    
+    
     /*
     *
     *Computational Methods
     *
     */
     
-    private static TreeMap<Long,Integer> findClusters(ArrayList<FibonacciFactor> significantFactors){
+    private static TreeMap<Long,Integer> findClusters(ArrayList<Factor> significantFactors){
         int numFactors = significantFactors.size();
         long powerSetMax = (long)Math.pow(2, numFactors);
         double productSum = 0;
@@ -164,7 +221,7 @@ public class FibonacciPolynomialsTerminal {
         
         for(int i = 1; i < powerSetMax; ++i){
             
-            Double currentValue = new Double(1);
+            double currentValue = 1;
             String binary = generateBinaryString(i,numFactors);
             
             for(int j = 0; j <binary.length(); ++j){
@@ -187,7 +244,7 @@ public class FibonacciPolynomialsTerminal {
             productSum += currentValue;
         }
         
-        productMean = productSum/pc;
+        productMean = (double)productSum/pc;
         
         System.out.println("");
         System.out.println("Number of Combinations: " + pc);
@@ -199,10 +256,10 @@ public class FibonacciPolynomialsTerminal {
     }
     
     
-    private static double findProduct(ArrayList<FibonacciFactor> factors){
+    private static double findProduct(ArrayList<Factor> factors){
         double product = 1;
         
-        for(FibonacciFactor f: factors){
+        for(Factor f: factors){
             if(!f.equalsOne())
                 product *= f.getValue();
         }
@@ -252,7 +309,7 @@ public class FibonacciPolynomialsTerminal {
     *Input/Output Methods
     *
     */
-    private static void getNandXInput(){
+    private static void getUserInput(){
         Scanner in = new Scanner(System.in);
             try{
                 System.out.print("Nth Polynomial: ");
@@ -260,6 +317,9 @@ public class FibonacciPolynomialsTerminal {
                 
                 System.out.print("X value: ");
                 x = in.nextDouble();
+                
+                System.out.print("Y value: ");
+                y = in.nextDouble();
             }
             catch(Exception e){
                 System.err.println(e.toString());
@@ -275,19 +335,19 @@ public class FibonacciPolynomialsTerminal {
         }
     }
     
-    private static void printFactors(ArrayList<FibonacciFactor> factors){
+    private static void printFactors(ArrayList<Factor> factors){
         StringBuilder output = new StringBuilder();
         
         output.append("Factors: ");
         
-        for(FibonacciFactor f: factors){
+        for(Factor f: factors){
             output.append(f.toString());
         }
         
         System.out.println(output.toString());
     }
     
-    private static void createClustersFile(TreeMap<Long,Integer> clusterings)throws FileNotFoundException, IOException{
+    private static void createClustersFile(TreeMap<Long,Integer> clusterings,String factorType)throws FileNotFoundException, IOException{
         
         StringWriter writer = new StringWriter();
         CSVWriter csv = new CSVWriter(writer,',','"','\n');
@@ -314,7 +374,7 @@ public class FibonacciPolynomialsTerminal {
         
     }
    
-    private static void createClustersFile(TreeMap<Long,Integer> clusterings, String fileDesc)throws FileNotFoundException, IOException{
+    private static void createClustersFile(TreeMap<Long,Integer> clusterings, String factorType, String fileDesc)throws FileNotFoundException, IOException{
         
         StringWriter writer = new StringWriter();
         CSVWriter csv = new CSVWriter(writer,',','"','\n');
@@ -327,7 +387,7 @@ public class FibonacciPolynomialsTerminal {
             csv.writeNext(row);
         }
         
-        String fileName = "F"+ n +"_" +fileDesc+ "_Clusters.csv";
+        String fileName = factorType + "_"+ n +"_" +fileDesc+ "_Clusters.csv";
         
         String filePath = System.getProperty("user.home") + "\\Desktop\\";
         File file = new File(filePath + fileName);
