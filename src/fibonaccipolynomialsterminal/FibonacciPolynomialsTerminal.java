@@ -46,7 +46,8 @@ public class FibonacciPolynomialsTerminal {
         while(!done){
             System.out.println("\nWhat would you like to do?");
             System.out.println("(1) Find Fibonacci Clusters | (2) Find Fibonacci Coprime Product | (3) Find Fibonacci Coprime Clusters  "
-                    + "\n(4) Find Lucas Clusters | (5) Find Lucas Coprime Clusters | (Q)uit");
+                    + "\n(4) Find Lucas Clusters | (5) Find Lucas Coprime Clusters "
+                    + "\n(6) Find Indices | (Q)uit");
             System.out.print("Input: ");
             
             try{
@@ -68,6 +69,9 @@ public class FibonacciPolynomialsTerminal {
                         break;
                     case "5":
                         executeFindLucasCoprimeClusters();
+                        break;
+                    case "6":
+                        executeFindIndices();
                         break;
                     case "Q":
                         done = true;
@@ -155,6 +159,15 @@ public class FibonacciPolynomialsTerminal {
         }
         catch(Exception e){System.err.println(e.toString());}
     }
+    private static void executeFindIndices(){
+        long number = getPrimeInput();
+        ArrayList<Long> indices = getIndices(number);
+        
+        StringBuilder output = new StringBuilder("Indices: ");
+        for(int i = 0; i < indices.size(); ++i)
+            output.append(indices.get(i) + ", ");
+        System.out.println(output);
+    }
     
     /*
     *
@@ -172,6 +185,18 @@ public class FibonacciPolynomialsTerminal {
         }
         
         return significantFactors;
+    }
+    
+    private static ArrayList<Factor> generateFibonacciFactors(int n){
+        ArrayList<Factor> factors = new ArrayList<>();
+        Factor f;
+        
+        for(int i = 1; i <= n/2; ++i){
+            f = new FibonacciFactor(i,n,1,1);
+            factors.add(f);
+        }
+        
+        return factors;
     }
     
     private static ArrayList<Factor> generateCoprimeFibonacciFactors(){
@@ -303,6 +328,85 @@ public class FibonacciPolynomialsTerminal {
         return coprime;
     }
     
+    private static ArrayList<Long> getIndices(long n){
+        
+        long neighbor1 = n - 1;
+        long neighbor2 = n + 1;
+        
+        ArrayList<Long> primeFactors1 = getPrimeFactors(neighbor1);
+        ArrayList<Long> primeFactors2 = getPrimeFactors(neighbor2);
+        
+        ArrayList<Long> divisors1 = getDivisors(primeFactors1);
+        ArrayList<Long> divisors2 = getDivisors(primeFactors2);
+        
+        ArrayList<Long> completeDivisors = combineDivisors(divisors1, divisors2);
+        
+        ArrayList<Long> indices = new ArrayList();
+        
+        for(int i = 0; i < completeDivisors.size(); ++i){
+            long f = getNthFibonacciNumber(completeDivisors.get(i).intValue());
+            if(f%n == 0)
+                indices.add(completeDivisors.get(i));
+        }
+        
+        return indices;
+    }
+    
+    private static long getNthFibonacciNumber(int n){
+        ArrayList<Factor> factors = generateFibonacciFactors(n);
+        long product = (long)findProduct(factors);
+        
+        return product;
+    }
+    
+    private static ArrayList<Long> getPrimeFactors(long n){
+        ArrayList<Long> factors = new ArrayList();
+        
+        while(n%2==0){
+            factors.add(new Long(2));
+            n/=2;
+        }
+        long i = 3;
+        while(n!=1){
+            while(n%i==0){
+                factors.add(new Long(i));
+                n/=i;
+            }
+            i+=2;
+        }
+        
+        return factors;
+    }
+    
+    private static ArrayList<Long> getDivisors(ArrayList<Long> factors){
+        ArrayList<Long> divisors = new ArrayList();
+        
+        int length = factors.size();
+        long max = (long)Math.pow(2, length);
+        for(int i = 1; i< max; ++i){
+            String binary = Long.toBinaryString(i);
+            int startIndex = factors.size() - binary.length();
+            long product = 1;
+            for(int j = startIndex; j < length; ++j){
+                if(binary.charAt(j-startIndex) == '1')
+                    product *= factors.get(j);
+            }
+            if(!divisors.contains(product))
+                divisors.add(product);
+        }
+        
+        return divisors;
+    }
+    private static ArrayList<Long> combineDivisors(ArrayList<Long> divisors1, ArrayList<Long> divisors2){
+        ArrayList<Long> divisors = divisors1;
+        
+        for(int i = 0; i < divisors2.size(); ++i){
+            if(!divisors.contains(divisors2.get(i)))
+                divisors.add(divisors2.get(i));
+        }
+        
+        return divisors;
+    }
     
     /*
     *
@@ -324,6 +428,21 @@ public class FibonacciPolynomialsTerminal {
             catch(Exception e){
                 System.err.println(e.toString());
             }
+    }
+    private static long getPrimeInput(){
+        
+        long n = 0;
+        
+        Scanner in = new Scanner(System.in);
+            try{
+                System.out.print("Prime Number:");
+                n = in.nextInt();
+            }
+            catch(Exception e){
+                System.err.println(e.toString());
+            }
+            
+            return n;
     }
     
     private static void printClusterings(TreeMap<Long,Integer> clusterings){
@@ -360,7 +479,7 @@ public class FibonacciPolynomialsTerminal {
             csv.writeNext(row);
         }
         
-        String fileName = "F"+ n + "_Clusters.csv";
+        String fileName = factorType + n + "_Clusters.csv";
         
         String filePath = System.getProperty("user.home") + "\\Desktop\\";
         File file = new File(filePath + fileName);
